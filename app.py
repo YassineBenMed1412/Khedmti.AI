@@ -86,7 +86,7 @@ def upload_file():
         return jsonify({"error": "No selected file"})
 
     if file:
-        filepath = os.path.join(app.config[echo "# Khedmti.AI" >> README.md"UPLOAD_FOLDER"], file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
         file.save(filepath)
 
         parser = ResumeParser(filepath)
