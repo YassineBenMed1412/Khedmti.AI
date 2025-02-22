@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CV - Khedmti.AI</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            background: url('/static/space.jpg') center/cover no-repeat;
+
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Dark overlay */
+        }
+        .rocket-img {
+            width: 120px; /* Adjust size */
+            position: absolute;
+            top: -150px; /* Move it up */
+            left: 50%;
+            transform: translateX(-50%);
+            animation: float 3s infinite ease-in-out;
+        }
+    
+    
+    
+  
+   
+   
+
+
+/* Floating animation */
+@keyframes float {
+    0% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-10px); }
+    100% { transform: translateX(-50%) translateY(0); }
+}
+
+
+
+        /* Twinkling Stars */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('stars.png') repeat;
+            opacity: 0.5;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        /* Hero Content */
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+        }
+
+        .btn-custom {
+            background-color: #a000ff;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-custom:hover {
+            background-color: #8000cc;
+            transform: scale(1.1);
+        }
+
+        /* Upload Section */
+        .upload-section {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .file-input {
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function uploadFile() {
+            let formData = new FormData();
+            let fileInput = document.getElementById("cvFile");
+
+            if (fileInput.files.length === 0) {
+                alert("Please select a file to upload.");
+                return;
+            }
+
+            formData.append("file", fileInput.files[0]);
+
+            fetch("/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Error: " + data.error);
+                } else {
+                    document.getElementById("result").innerText = data.extracted_text;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="stars"></div> <!-- Animated Stars -->
+        <div class="hero-content">
+            <img src="/static/rocket.png" class="rocket-img">
+            <h1>Hi, I am Khedmti.AI</h1>
+            <p>AI Resume Parser and Job Recommender</p>
+            <a href="#cv-upload" class="btn btn-custom">Upload CV</a>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section id="cv-upload" class="upload-section container">
+        <h2>Upload Your CV</h2>
+        <p class="text-muted">Upload your PDF or DOCX resume to extract key information.</p>
+        <input type="file" id="cvFile" accept=".pdf,.docx" class="file-input">
+        <button class="btn btn-primary mt-3" onclick="uploadFile()">Upload</button>
+
+        <h3 class="mt-4">Extracted Text:</h3>
+        <pre id="result" class="border p-3 bg-light"></pre>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+</body>
+</html>
